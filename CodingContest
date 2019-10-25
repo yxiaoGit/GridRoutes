@@ -1,0 +1,95 @@
+import java.util.*;
+import java.util.stream.*;
+
+class Row {
+	int[] data;
+	int rowNum;
+}
+public class MaxSum {
+
+	public static void main(String[] args) {
+		Row row0 = new Row();
+		row0.data = new int[1];
+		row0.data[0] = 5;
+		row0.rowNum = 0;
+		
+		Row row1 = new Row();
+		row1.data = new int[2];
+		row1.data[0] = 9;
+		row1.data[1] = 6;
+		row1.rowNum = 1;
+		
+		Row row2 = new Row();
+		row2.data = new int[3];
+		row2.data[0] = 4;
+		row2.data[1] = 6;
+		row2.data[2] = 8;
+		row2.rowNum = 2;
+		
+		Row row3 = new Row();
+		row3.data = new int[4];
+		row3.data[0] = 0;
+		row3.data[1] = 7;
+		row3.data[2] = 1;
+		row3.data[3] = 5;
+		row3.rowNum = 3;
+		
+		List<Row> allRows = new ArrayList<>();
+		allRows.add(row0);
+		allRows.add(row1);
+		allRows.add(row2);
+		allRows.add(row3);
+		
+		
+		int totalRow=4;
+		
+		int currentRow =0;
+		int totalLeft = 0;
+		int totalRight = 0;
+		int currentTotal= allRows.get(0).data[0];
+		List<Integer[]> queue = new ArrayList<>();
+		Integer[] toadd = new Integer[3];
+	    toadd[0] = allRows.get(0).data[0]; //total
+		toadd[1] = 0;  //index
+		toadd[2] = 0; //currentrow
+		
+		queue.add(toadd);
+		int index = 0;
+		int lastRow = 3;
+		while (true  ) {
+			currentTotal = queue.get(0)[0];
+			index = queue.get(0)[1];
+			currentRow = queue.get(0)[2];
+			queue.remove(0);
+			totalLeft = currentTotal + allRows.get(currentRow+1).data[index];
+			totalRight = currentTotal + allRows.get(currentRow+1).data[index+1];
+			System.out.println("totalLeft: " + totalLeft + " totalright: " + totalRight);
+			Integer[] leftToadd = new Integer[3];
+			leftToadd[0] = totalLeft;
+			leftToadd[1] = index;
+			leftToadd[2] = currentRow+1;
+			
+			queue.add(leftToadd);
+			
+			Integer[] rightToadd = new Integer[3];
+			rightToadd[0] = totalRight;
+			rightToadd[1] = index+1;
+			rightToadd[2] = currentRow+1;
+			
+			queue.add(rightToadd);
+			
+			if ((currentRow+1) == lastRow &&  index == (lastRow-1) )
+				break;
+		}
+		
+		for(Integer[] data: queue) {
+			System.out.println("total : " + data[0] + " index: " + data[1] + " row: " + data[2]);
+     }
+
+     // OptionalInt max = list.stream().mapToInt(Integer::intValue).max();		
+      OptionalInt max =  queue.stream().map(x->x[0]).mapToInt(Integer::intValue).max();
+      System.out.println("max is : " + max);
+		
+		
+	}
+}
